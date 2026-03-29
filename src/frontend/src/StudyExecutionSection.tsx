@@ -285,7 +285,7 @@ export default function StudyExecutionSection({
   const plannedMinutes = Math.round(inputs.studyHours * 60);
 
   const integrityColor =
-    integrity >= 80 ? "#22C55E" : integrity >= 50 ? "#F59E0B" : "#EF4444";
+    integrity >= 80 ? "#a09070" : integrity >= 50 ? "#C7B7A3" : "#6D2932";
   const integrityLabel =
     integrity >= 80
       ? "Solid Focus"
@@ -293,7 +293,7 @@ export default function StudyExecutionSection({
         ? "Slipping"
         : "Performing, not working";
 
-  const timerColor = timerMode === "focus" ? "#3B82F6" : "#F59E0B";
+  const timerColor = timerMode === "focus" ? "#561C24" : "#C7B7A3";
 
   const sessionFeedback =
     integrity >= 80
@@ -314,7 +314,7 @@ export default function StudyExecutionSection({
       >
         <p
           style={{
-            color: "#3B82F6",
+            color: "#561C24",
             fontSize: "0.68rem",
             letterSpacing: "0.18em",
             fontWeight: 600,
@@ -325,7 +325,7 @@ export default function StudyExecutionSection({
         </p>
         <h2
           style={{
-            color: "#F9FAFB",
+            color: "#E8D8C4",
             fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
             fontWeight: 800,
             letterSpacing: "-0.02em",
@@ -334,7 +334,7 @@ export default function StudyExecutionSection({
           Stop Performing. Start Working.
         </h2>
         <p
-          style={{ color: "#6B7280", fontSize: "0.88rem", marginTop: "0.3rem" }}
+          style={{ color: "#8B7A6A", fontSize: "0.88rem", marginTop: "0.3rem" }}
         >
           The analysis is done. Now execute.
         </p>
@@ -348,11 +348,11 @@ export default function StudyExecutionSection({
             boxShadow:
               isRunning && timerMode === "focus"
                 ? [
-                    "0 0 0px rgba(59,130,246,0)",
-                    "0 0 22px rgba(59,130,246,0.35)",
-                    "0 0 0px rgba(59,130,246,0)",
+                    "0 0 0px rgba(86,28,36,0)",
+                    "0 0 22px rgba(86,28,36,0.35)",
+                    "0 0 0px rgba(86,28,36,0)",
                   ]
-                : "0 0 0px rgba(59,130,246,0)",
+                : "0 0 0px rgba(86,28,36,0)",
           }}
           transition={{
             duration: 2,
@@ -366,7 +366,7 @@ export default function StudyExecutionSection({
             <div>
               <span
                 style={{
-                  color: "#6B7280",
+                  color: "#8B7A6A",
                   fontSize: "0.68rem",
                   letterSpacing: "0.15em",
                 }}
@@ -377,7 +377,7 @@ export default function StudyExecutionSection({
                   : "Focus Session"}
               </span>
               <h3
-                style={{ color: "#E5E7EB", fontWeight: 700, fontSize: "1rem" }}
+                style={{ color: "#E8D8C4", fontWeight: 700, fontSize: "1rem" }}
               >
                 Focus Timer
               </h3>
@@ -388,7 +388,7 @@ export default function StudyExecutionSection({
                 data-ocid="execution.sound.toggle"
                 onClick={() => setSoundEnabled((s) => !s)}
                 style={{
-                  color: soundEnabled ? "#3B82F6" : "#4B5563",
+                  color: soundEnabled ? "#561C24" : "#6B5C52",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
@@ -416,7 +416,7 @@ export default function StudyExecutionSection({
                   cy="70"
                   r="54"
                   fill="none"
-                  stroke="#1F1F1F"
+                  stroke="rgba(109,41,50,0.25)"
                   strokeWidth="6"
                 />
                 {/* Progress arc */}
@@ -443,7 +443,7 @@ export default function StudyExecutionSection({
               >
                 <span
                   style={{
-                    color: "#F9FAFB",
+                    color: "#E8D8C4",
                     fontSize: "1.75rem",
                     fontWeight: 800,
                     letterSpacing: "-0.03em",
@@ -475,14 +475,14 @@ export default function StudyExecutionSection({
                 onClick={handleStartPause}
                 className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer"
                 style={{
-                  color: isRunning ? "#F59E0B" : "#3B82F6",
-                  border: `1px solid ${isRunning ? "rgba(245,158,11,0.4)" : "rgba(59,130,246,0.4)"}`,
+                  color: isRunning ? "#C7B7A3" : "#561C24",
+                  border: `1px solid ${isRunning ? "rgba(199,183,163,0.4)" : "rgba(86,28,36,0.4)"}`,
                   background: "transparent",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = isRunning
-                    ? "rgba(245,158,11,0.08)"
-                    : "rgba(59,130,246,0.08)";
+                    ? "rgba(199,183,163,0.08)"
+                    : "rgba(86,28,36,0.08)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "transparent";
@@ -497,17 +497,17 @@ export default function StudyExecutionSection({
                 onClick={handleReset}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
                 style={{
-                  color: "#6B7280",
-                  border: "1px solid #2A2A2A",
+                  color: "#8B7A6A",
+                  border: "1px solid rgba(109,41,50,0.4)",
                   background: "transparent",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#4B5563";
-                  e.currentTarget.style.color = "#9CA3AF";
+                  e.currentTarget.style.borderColor = "#6B5C52";
+                  e.currentTarget.style.color = "#C7B7A3";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#2A2A2A";
-                  e.currentTarget.style.color = "#6B7280";
+                  e.currentTarget.style.borderColor = "rgba(199,183,163,0.12)";
+                  e.currentTarget.style.color = "#8B7A6A";
                 }}
               >
                 <RotateCcw size={13} />
@@ -517,7 +517,7 @@ export default function StudyExecutionSection({
 
             {/* Duration adjust */}
             <div className="flex items-center gap-2 mt-3">
-              <span style={{ color: "#4B5563", fontSize: "0.75rem" }}>
+              <span style={{ color: "#6B5C52", fontSize: "0.75rem" }}>
                 Focus:
               </span>
               <input
@@ -531,13 +531,13 @@ export default function StudyExecutionSection({
                 data-ocid="execution.timer.input"
                 className="w-14 text-center rounded px-2 py-1 text-sm"
                 style={{
-                  background: "#1A1A1A",
-                  border: "1px solid #2A2A2A",
-                  color: "#E5E7EB",
+                  background: "rgba(86,28,36,0.1)",
+                  border: "1px solid rgba(109,41,50,0.4)",
+                  color: "#E8D8C4",
                   outline: "none",
                 }}
               />
-              <span style={{ color: "#4B5563", fontSize: "0.75rem" }}>min</span>
+              <span style={{ color: "#6B5C52", fontSize: "0.75rem" }}>min</span>
             </div>
           </div>
         </motion.div>
@@ -554,7 +554,7 @@ export default function StudyExecutionSection({
             <div>
               <span
                 style={{
-                  color: "#6B7280",
+                  color: "#8B7A6A",
                   fontSize: "0.68rem",
                   letterSpacing: "0.15em",
                 }}
@@ -563,21 +563,21 @@ export default function StudyExecutionSection({
                 Live Tracking
               </span>
               <h3
-                style={{ color: "#E5E7EB", fontWeight: 700, fontSize: "1rem" }}
+                style={{ color: "#E8D8C4", fontWeight: 700, fontSize: "1rem" }}
               >
                 Session Clock
               </h3>
             </div>
-            <Clock size={16} style={{ color: "#3B82F6" }} />
+            <Clock size={16} style={{ color: "#561C24" }} />
           </div>
 
           <div className="space-y-4">
             {/* Current time */}
             <div className="inner-panel rounded-lg p-3 flex items-center justify-between">
-              <span style={{ color: "#6B7280", fontSize: "0.78rem" }}>Now</span>
+              <span style={{ color: "#8B7A6A", fontSize: "0.78rem" }}>Now</span>
               <span
                 style={{
-                  color: "#E5E7EB",
+                  color: "#E8D8C4",
                   fontWeight: 700,
                   fontSize: "1rem",
                   fontVariantNumeric: "tabular-nums",
@@ -589,12 +589,12 @@ export default function StudyExecutionSection({
 
             {/* Session time */}
             <div className="inner-panel rounded-lg p-3 flex items-center justify-between">
-              <span style={{ color: "#6B7280", fontSize: "0.78rem" }}>
+              <span style={{ color: "#8B7A6A", fontSize: "0.78rem" }}>
                 Session time
               </span>
               <span
                 style={{
-                  color: sessionStart ? "#22C55E" : "#4B5563",
+                  color: sessionStart ? "#a09070" : "#6B5C52",
                   fontWeight: 700,
                   fontSize: "0.9rem",
                   fontVariantNumeric: "tabular-nums",
@@ -606,12 +606,12 @@ export default function StudyExecutionSection({
 
             {/* Deep work streak */}
             <div className="inner-panel rounded-lg p-3 flex items-center justify-between">
-              <span style={{ color: "#6B7280", fontSize: "0.78rem" }}>
+              <span style={{ color: "#8B7A6A", fontSize: "0.78rem" }}>
                 Deep work streak
               </span>
               <span
                 style={{
-                  color: deepWorkStart && isRunning ? "#3B82F6" : "#4B5563",
+                  color: deepWorkStart && isRunning ? "#561C24" : "#6B5C52",
                   fontWeight: 700,
                   fontSize: "0.9rem",
                   fontVariantNumeric: "tabular-nums",
@@ -626,11 +626,14 @@ export default function StudyExecutionSection({
             {/* Time Bleed Indicator */}
             <div
               className="rounded-lg p-3"
-              style={{ border: "1px solid #1F1F1F", background: "#0D0D0D" }}
+              style={{
+                border: "1px solid rgba(109,41,50,0.25)",
+                background: "rgba(7,2,4,0.7)",
+              }}
             >
               <p
                 style={{
-                  color: "#4B5563",
+                  color: "#6B5C52",
                   fontSize: "0.7rem",
                   letterSpacing: "0.1em",
                 }}
@@ -639,17 +642,17 @@ export default function StudyExecutionSection({
                 Time Bleed
               </p>
               <div className="flex items-center justify-between text-xs mb-1">
-                <span style={{ color: "#6B7280" }}>Planned</span>
-                <span style={{ color: "#9CA3AF" }}>{plannedMinutes}m</span>
+                <span style={{ color: "#8B7A6A" }}>Planned</span>
+                <span style={{ color: "#C7B7A3" }}>{plannedMinutes}m</span>
               </div>
               <div className="flex items-center justify-between text-xs mb-1">
-                <span style={{ color: "#6B7280" }}>Focus</span>
-                <span style={{ color: "#22C55E" }}>{focusMinutes}m</span>
+                <span style={{ color: "#8B7A6A" }}>Focus</span>
+                <span style={{ color: "#a09070" }}>{focusMinutes}m</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span style={{ color: "#6B7280" }}>Bleed</span>
+                <span style={{ color: "#8B7A6A" }}>Bleed</span>
                 <span
-                  style={{ color: bleedSeconds > 0 ? "#EF4444" : "#4B5563" }}
+                  style={{ color: bleedSeconds > 0 ? "#6D2932" : "#6B5C52" }}
                 >
                   {bleedMinutes}m {bleedSecs}s
                 </span>
@@ -657,7 +660,7 @@ export default function StudyExecutionSection({
               {bleedSeconds > 300 && (
                 <p
                   style={{
-                    color: "#EF4444",
+                    color: "#6D2932",
                     fontSize: "0.75rem",
                     marginTop: "0.5rem",
                     fontWeight: 600,
@@ -682,7 +685,7 @@ export default function StudyExecutionSection({
             <div>
               <span
                 style={{
-                  color: "#6B7280",
+                  color: "#8B7A6A",
                   fontSize: "0.68rem",
                   letterSpacing: "0.15em",
                 }}
@@ -691,12 +694,12 @@ export default function StudyExecutionSection({
                 Priority Queue
               </span>
               <h3
-                style={{ color: "#E5E7EB", fontWeight: 700, fontSize: "1rem" }}
+                style={{ color: "#E8D8C4", fontWeight: 700, fontSize: "1rem" }}
               >
                 Do This Now
               </h3>
             </div>
-            <CheckSquare size={16} style={{ color: "#22C55E" }} />
+            <CheckSquare size={16} style={{ color: "#a09070" }} />
           </div>
 
           {/* Task List */}
@@ -713,10 +716,10 @@ export default function StudyExecutionSection({
                     transition={{ duration: 0.25 }}
                     className="flex items-center gap-3 py-2 px-3 rounded-lg cursor-default group"
                     style={{
-                      border: "1px solid #1F1F1F",
+                      border: "1px solid rgba(109,41,50,0.25)",
                       background:
                         activeTask === task.name
-                          ? "rgba(59,130,246,0.05)"
+                          ? "rgba(86,28,36,0.05)"
                           : "transparent",
                     }}
                     data-ocid={`execution.tasks.item.${i + 1}`}
@@ -731,12 +734,12 @@ export default function StudyExecutionSection({
                       }
                       className="flex-shrink-0 w-4 h-4 rounded-sm border transition-all duration-150 cursor-pointer"
                       style={{
-                        border: "1px solid #3B82F6",
+                        border: "1px solid #561C24",
                         background: "transparent",
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background =
-                          "rgba(59,130,246,0.15)";
+                          "rgba(86,28,36,0.15)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
@@ -744,7 +747,7 @@ export default function StudyExecutionSection({
                     />
                     <span
                       style={{
-                        color: activeTask === task.name ? "#3B82F6" : "#D1D5DB",
+                        color: activeTask === task.name ? "#561C24" : "#E8D8C4",
                         fontSize: "0.85rem",
                         flex: 1,
                       }}
@@ -754,7 +757,7 @@ export default function StudyExecutionSection({
                     {activeTask === task.name && (
                       <span
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#3B82F6" }}
+                        style={{ background: "#561C24" }}
                       />
                     )}
                   </motion.div>
@@ -764,7 +767,7 @@ export default function StudyExecutionSection({
             {tasks.every((t) => t.done) && (
               <p
                 style={{
-                  color: "#22C55E",
+                  color: "#a09070",
                   fontSize: "0.85rem",
                   textAlign: "center",
                   padding: "1rem 0",
@@ -780,13 +783,13 @@ export default function StudyExecutionSection({
             <div
               className="rounded-lg px-4 py-2.5 mb-3"
               style={{
-                border: "1px solid rgba(59,130,246,0.3)",
-                background: "rgba(59,130,246,0.06)",
+                border: "1px solid rgba(86,28,36,0.3)",
+                background: "rgba(86,28,36,0.06)",
               }}
             >
               <p
                 style={{
-                  color: "#9CA3AF",
+                  color: "#C7B7A3",
                   fontSize: "0.7rem",
                   marginBottom: "2px",
                 }}
@@ -795,7 +798,7 @@ export default function StudyExecutionSection({
               </p>
               <p
                 style={{
-                  color: "#3B82F6",
+                  color: "#561C24",
                   fontWeight: 700,
                   fontSize: "0.9rem",
                 }}
@@ -811,17 +814,17 @@ export default function StudyExecutionSection({
             onClick={handleAutoStart}
             className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer"
             style={{
-              color: "#F9FAFB",
-              border: "1px solid rgba(59,130,246,0.35)",
+              color: "#E8D8C4",
+              border: "1px solid rgba(86,28,36,0.35)",
               background: "transparent",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(59,130,246,0.1)";
-              e.currentTarget.style.borderColor = "rgba(59,130,246,0.6)";
+              e.currentTarget.style.background = "rgba(86,28,36,0.1)";
+              e.currentTarget.style.borderColor = "rgba(86,28,36,0.6)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.borderColor = "rgba(59,130,246,0.35)";
+              e.currentTarget.style.borderColor = "rgba(86,28,36,0.35)";
             }}
           >
             Tell Me What To Do
@@ -831,7 +834,7 @@ export default function StudyExecutionSection({
           {avoidanceDisplay && (
             <p
               style={{
-                color: "#F59E0B",
+                color: "#C7B7A3",
                 fontSize: "0.78rem",
                 marginTop: "0.75rem",
               }}
@@ -854,7 +857,7 @@ export default function StudyExecutionSection({
             <div>
               <span
                 style={{
-                  color: "#6B7280",
+                  color: "#8B7A6A",
                   fontSize: "0.68rem",
                   letterSpacing: "0.15em",
                 }}
@@ -863,7 +866,7 @@ export default function StudyExecutionSection({
                 Session Quality
               </span>
               <h3
-                style={{ color: "#E5E7EB", fontWeight: 700, fontSize: "1rem" }}
+                style={{ color: "#E8D8C4", fontWeight: 700, fontSize: "1rem" }}
               >
                 Focus Integrity
               </h3>
@@ -903,7 +906,7 @@ export default function StudyExecutionSection({
           {/* Progress bar */}
           <div
             className="h-2 rounded-full mb-4"
-            style={{ background: "#1F1F1F" }}
+            style={{ background: "rgba(109,41,50,0.25)" }}
           >
             <motion.div
               animate={{ width: `${integrity}%` }}
@@ -915,18 +918,18 @@ export default function StudyExecutionSection({
 
           <div className="space-y-3">
             <p
-              style={{ color: "#6B7280", fontSize: "0.8rem", lineHeight: 1.5 }}
+              style={{ color: "#8B7A6A", fontSize: "0.8rem", lineHeight: 1.5 }}
             >
               Every pause costs you focus capital.
             </p>
             <div className="inner-panel rounded-lg p-3">
               <div className="flex items-center justify-between">
-                <span style={{ color: "#4B5563", fontSize: "0.75rem" }}>
+                <span style={{ color: "#6B5C52", fontSize: "0.75rem" }}>
                   Pauses
                 </span>
                 <span
                   style={{
-                    color: pauseCount > 2 ? "#EF4444" : "#9CA3AF",
+                    color: pauseCount > 2 ? "#6D2932" : "#C7B7A3",
                     fontWeight: 700,
                   }}
                 >
@@ -934,10 +937,10 @@ export default function StudyExecutionSection({
                 </span>
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span style={{ color: "#4B5563", fontSize: "0.75rem" }}>
+                <span style={{ color: "#6B5C52", fontSize: "0.75rem" }}>
                   Sessions
                 </span>
-                <span style={{ color: "#9CA3AF", fontWeight: 700 }}>
+                <span style={{ color: "#C7B7A3", fontWeight: 700 }}>
                   {sessionCount}
                 </span>
               </div>
@@ -948,12 +951,12 @@ export default function StudyExecutionSection({
             <Zap
               size={14}
               style={{
-                color: "#4B5563",
+                color: "#6B5C52",
                 display: "inline",
                 marginRight: "6px",
               }}
             />
-            <span style={{ color: "#4B5563", fontSize: "0.75rem" }}>
+            <span style={{ color: "#6B5C52", fontSize: "0.75rem" }}>
               {pauseCount === 0
                 ? "No interruptions recorded."
                 : `${pauseCount} interruption${pauseCount > 1 ? "s" : ""} recorded this session.`}
@@ -980,12 +983,12 @@ export default function StudyExecutionSection({
               exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.25 }}
               className="card-surface rounded-xl p-8 max-w-sm w-full mx-4"
-              style={{ border: "1px solid #2A2A2A" }}
+              style={{ border: "1px solid rgba(109,41,50,0.4)" }}
             >
               <div className="flex items-center justify-between mb-6">
                 <h3
                   style={{
-                    color: "#F9FAFB",
+                    color: "#E8D8C4",
                     fontWeight: 800,
                     fontSize: "1.1rem",
                   }}
@@ -997,7 +1000,7 @@ export default function StudyExecutionSection({
                   data-ocid="execution.modal.close_button"
                   onClick={() => setShowSummary(false)}
                   style={{
-                    color: "#4B5563",
+                    color: "#6B5C52",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
@@ -1007,27 +1010,30 @@ export default function StudyExecutionSection({
                 </button>
               </div>
 
-              <div className="h-px mb-6" style={{ background: "#1F1F1F" }} />
+              <div
+                className="h-px mb-6"
+                style={{ background: "rgba(109,41,50,0.25)" }}
+              />
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center justify-between">
-                  <span style={{ color: "#6B7280", fontSize: "0.85rem" }}>
+                  <span style={{ color: "#8B7A6A", fontSize: "0.85rem" }}>
                     Time studied
                   </span>
-                  <span style={{ color: "#E5E7EB", fontWeight: 700 }}>
+                  <span style={{ color: "#E8D8C4", fontWeight: 700 }}>
                     {summaryData.focusMinutes}m
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span style={{ color: "#6B7280", fontSize: "0.85rem" }}>
+                  <span style={{ color: "#8B7A6A", fontSize: "0.85rem" }}>
                     Tasks completed
                   </span>
-                  <span style={{ color: "#E5E7EB", fontWeight: 700 }}>
+                  <span style={{ color: "#E8D8C4", fontWeight: 700 }}>
                     {summaryData.tasksCompleted}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span style={{ color: "#6B7280", fontSize: "0.85rem" }}>
+                  <span style={{ color: "#8B7A6A", fontSize: "0.85rem" }}>
                     Focus integrity
                   </span>
                   <span style={{ color: integrityColor, fontWeight: 700 }}>
@@ -1038,11 +1044,14 @@ export default function StudyExecutionSection({
 
               <div
                 className="rounded-lg p-4 mb-6"
-                style={{ background: "#0D0D0D", border: "1px solid #1F1F1F" }}
+                style={{
+                  background: "rgba(7,2,4,0.7)",
+                  border: "1px solid rgba(109,41,50,0.25)",
+                }}
               >
                 <p
                   style={{
-                    color: "#9CA3AF",
+                    color: "#C7B7A3",
                     fontSize: "0.85rem",
                     lineHeight: 1.55,
                   }}
@@ -1057,12 +1066,12 @@ export default function StudyExecutionSection({
                 onClick={() => setShowSummary(false)}
                 className="w-full py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer"
                 style={{
-                  color: "#3B82F6",
-                  border: "1px solid rgba(59,130,246,0.35)",
+                  color: "#561C24",
+                  border: "1px solid rgba(86,28,36,0.35)",
                   background: "transparent",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(59,130,246,0.1)";
+                  e.currentTarget.style.background = "rgba(86,28,36,0.1)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "transparent";
