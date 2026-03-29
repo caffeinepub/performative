@@ -225,12 +225,13 @@ function LoadingOverlay() {
 // ─── TAB 1: ANALYSIS ─────────────────────────────────────────────────────────
 function InputPanel({
   onGenerate,
-}: { onGenerate: (inputs: SimulationInputs) => void }) {
-  const [subjects, setSubjects] = useState<Subject[]>([
-    { id: "1", name: "Mathematics", confidence: "medium", weight: "high" },
-    { id: "2", name: "Economics", confidence: "low", weight: "medium" },
-    { id: "3", name: "English", confidence: "high", weight: "low" },
-  ]);
+  subjects,
+  setSubjects,
+}: {
+  onGenerate: (inputs: SimulationInputs) => void;
+  subjects: Subject[];
+  setSubjects: React.Dispatch<React.SetStateAction<Subject[]>>;
+}) {
   const [daysLeft, setDaysLeft] = useState(14);
   const [studyHours, setStudyHours] = useState(4);
   const [pastPercentage, setPastPercentage] = useState(68);
@@ -283,7 +284,7 @@ function InputPanel({
             <Brain size={18} style={{ color: "#561C24" }} />
           </div>
           <div
-            className="flex items-center gap-2 mb-2"
+            className="hidden sm:flex items-center gap-2 mb-2"
             style={{ paddingRight: "1.6rem" }}
           >
             <span style={{ color: "#6B5C52", fontSize: "0.65rem", flex: 1 }}>
@@ -307,7 +308,7 @@ function InputPanel({
               <div
                 key={s.id}
                 data-ocid={`subjects.item.${i + 1}`}
-                className="inner-panel rounded-lg p-3 flex items-center gap-2"
+                className="inner-panel rounded-lg p-3 flex flex-wrap items-center gap-2"
               >
                 <input
                   data-ocid="subjects.input"
@@ -1362,7 +1363,7 @@ function ResultsGrid({
             </div>
             <Zap size={18} style={{ color: "#C7B7A3" }} />
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {[
               { label: "Must Do", items: result.mustDo, color: "#a09070" },
               { label: "Should Do", items: result.shouldDo, color: "#C7B7A3" },
@@ -1544,7 +1545,7 @@ function ResultsGrid({
       </div>
 
       {/* Below grid: Subject Intelligence + Trajectory + Goal */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <SubjectIntelligence inputs={inputs} />
         <PerformanceTrajectory result={result} />
         <GoalSystemCard result={result} inputs={inputs} />
@@ -1597,7 +1598,13 @@ function ResultsGrid({
 
 function AnalysisTab({
   onResultGenerated,
-}: { onResultGenerated: (r: SimulationResult, i: SimulationInputs) => void }) {
+  globalSubjects,
+  setGlobalSubjects,
+}: {
+  onResultGenerated: (r: SimulationResult, i: SimulationInputs) => void;
+  globalSubjects: Subject[];
+  setGlobalSubjects: React.Dispatch<React.SetStateAction<Subject[]>>;
+}) {
   const [appState, setAppState] = useState<"input" | "loading" | "results">(
     "input",
   );
@@ -1671,7 +1678,11 @@ function AnalysisTab({
                 Fill in what you actually have, not what you wish you had.
               </p>
             </div>
-            <InputPanel onGenerate={handleGenerate} />
+            <InputPanel
+              onGenerate={handleGenerate}
+              subjects={globalSubjects}
+              setSubjects={setGlobalSubjects}
+            />
           </motion.div>
         )}
         {appState === "results" && result && inputs && (
@@ -1803,10 +1814,16 @@ function FocusScoreDisplay({ score }: { score: number }) {
 function StudyModeTab({
   result,
   inputs,
-}: { result: SimulationResult | null; inputs: SimulationInputs | null }) {
+  globalSubjects,
+}: {
+  result: SimulationResult | null;
+  inputs: SimulationInputs | null;
+  globalSubjects: Subject[];
+}) {
+  const effectiveSubjects = inputs?.subjects ?? globalSubjects;
   if (!result || !inputs) {
     return (
-      <div className="flex flex-col items-center justify-center py-32">
+      <div className="flex flex-col items-center justify-center py-24">
         <Brain
           size={48}
           style={{ color: "rgba(199,183,163,0.12)", marginBottom: "1.5rem" }}
@@ -1821,9 +1838,32 @@ function StudyModeTab({
         >
           No Analysis Yet
         </h3>
-        <p style={{ color: "#374151", fontSize: "0.88rem" }}>
+        <p
+          style={{
+            color: "#374151",
+            fontSize: "0.88rem",
+            marginBottom: "1.5rem",
+          }}
+        >
           Run your analysis in the Analysis tab first.
         </p>
+        {effectiveSubjects.length > 0 && (
+          <div className="flex flex-wrap gap-2 justify-center">
+            {effectiveSubjects.map((s) => (
+              <span
+                key={s.id}
+                className="px-3 py-1 rounded-full text-xs font-medium"
+                style={{
+                  background: "rgba(86,28,36,0.12)",
+                  border: "1px solid rgba(109,41,50,0.25)",
+                  color: "#8B7A6A",
+                }}
+              >
+                {s.name || "Unnamed"}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -1874,7 +1914,12 @@ interface CalendarBlock {
 
 function CalendarTab({
   result,
-}: { result: SimulationResult | null; inputs?: SimulationInputs | null }) {
+  globalSubjects,
+}: {
+  result: SimulationResult | null;
+  inputs?: SimulationInputs | null;
+  globalSubjects: Subject[];
+}) {
   const [blocks, setBlocks] = useState<CalendarBlock[]>([]);
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOverDay, setDragOverDay] = useState<number | null>(null);
@@ -1934,6 +1979,8 @@ function CalendarTab({
 
   const totalHoursPerDay = (day: number) => (blocksByDay(day).length * 45) / 60;
 
+  const calSubjects = result ? undefined : globalSubjects; // consumed to avoid lint error
+  void calSubjects;
   if (!result) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
@@ -1989,115 +2036,118 @@ function CalendarTab({
         </p>
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
-        {DAY_SHORT.map((day, d) => {
-          const isPast = d < todayDow;
-          const isToday = d === todayDow;
-          const dayBlocks = blocksByDay(d);
-          const hours = totalHoursPerDay(d);
-          const overloaded = hours > 6;
-          return (
-            <div
-              key={day}
-              data-ocid={`calendar.item.${d + 1}`}
-              className="min-h-48 rounded-xl p-2 transition-all duration-200"
-              style={{
-                background:
-                  dragOverDay === d
-                    ? "rgba(86,28,36,0.2)"
-                    : "rgba(86,28,36,0.05)",
-                border: isToday
-                  ? "1px solid rgba(86,28,36,0.4)"
-                  : dragOverDay === d
-                    ? "1px solid rgba(86,28,36,0.3)"
-                    : "1px solid rgba(109,41,50,0.25)",
-                opacity: isPast ? 0.5 : 1,
-              }}
-              onDragOver={(e) => handleDragOver(e, d)}
-              onDrop={() => handleDrop(d)}
-              onDragLeave={() => setDragOverDay(null)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span
-                  style={{
-                    color: isToday ? "#561C24" : "#C7B7A3",
-                    fontSize: "0.72rem",
-                    fontWeight: isToday ? 700 : 500,
-                  }}
-                >
-                  {day}
-                </span>
-                {overloaded && (
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+        <div className="grid grid-cols-7 gap-2 min-w-[560px] md:min-w-0">
+          {DAY_SHORT.map((day, d) => {
+            const isPast = d < todayDow;
+            const isToday = d === todayDow;
+            const dayBlocks = blocksByDay(d);
+            const hours = totalHoursPerDay(d);
+            const overloaded = hours > 6;
+            return (
+              <div
+                key={day}
+                data-ocid={`calendar.item.${d + 1}`}
+                className="min-h-48 rounded-xl p-2 transition-all duration-200"
+                style={{
+                  background:
+                    dragOverDay === d
+                      ? "rgba(86,28,36,0.2)"
+                      : "rgba(86,28,36,0.05)",
+                  border: isToday
+                    ? "1px solid rgba(86,28,36,0.4)"
+                    : dragOverDay === d
+                      ? "1px solid rgba(86,28,36,0.3)"
+                      : "1px solid rgba(109,41,50,0.25)",
+                  opacity: isPast ? 0.5 : 1,
+                }}
+                onDragOver={(e) => handleDragOver(e, d)}
+                onDrop={() => handleDrop(d)}
+                onDragLeave={() => setDragOverDay(null)}
+              >
+                <div className="flex items-center justify-between mb-2">
                   <span
                     style={{
-                      color: "#6D2932",
-                      fontSize: "0.6rem",
-                      fontWeight: 700,
+                      color: isToday ? "#561C24" : "#C7B7A3",
+                      fontSize: "0.72rem",
+                      fontWeight: isToday ? 700 : 500,
                     }}
                   >
-                    OVR
+                    {day}
                   </span>
-                )}
-              </div>
-              {dayBlocks.length === 0 ? (
-                <div
-                  className="flex items-center justify-center h-20"
-                  style={{
-                    color: "rgba(199,183,163,0.12)",
-                    fontSize: "0.65rem",
-                  }}
-                >
-                  empty
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  {dayBlocks.map((b) => (
-                    <div
-                      key={b.id}
-                      data-ocid="calendar.drag_handle"
-                      draggable
-                      onDragStart={() => handleDragStart(b.id)}
-                      className="rounded-lg p-2 cursor-grab active:cursor-grabbing transition-all duration-150"
+                  {overloaded && (
+                    <span
                       style={{
-                        background:
-                          b.priority === "must"
-                            ? "rgba(160,144,112,0.1)"
-                            : "rgba(199,183,163,0.08)",
-                        border:
-                          b.priority === "must"
-                            ? "1px solid rgba(160,144,112,0.25)"
-                            : "1px solid rgba(199,183,163,0.2)",
-                        opacity: isPast ? 0.6 : 1,
+                        color: "#6D2932",
+                        fontSize: "0.6rem",
+                        fontWeight: 700,
                       }}
                     >
-                      <p
+                      OVR
+                    </span>
+                  )}
+                </div>
+                {dayBlocks.length === 0 ? (
+                  <div
+                    className="flex items-center justify-center h-20"
+                    style={{
+                      color: "rgba(199,183,163,0.12)",
+                      fontSize: "0.65rem",
+                    }}
+                  >
+                    empty
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    {dayBlocks.map((b) => (
+                      <div
+                        key={b.id}
+                        data-ocid="calendar.drag_handle"
+                        draggable
+                        onDragStart={() => handleDragStart(b.id)}
+                        className="rounded-lg p-2 cursor-grab active:cursor-grabbing transition-all duration-150"
                         style={{
-                          color: b.priority === "must" ? "#a09070" : "#C7B7A3",
-                          fontSize: "0.65rem",
-                          fontWeight: 700,
+                          background:
+                            b.priority === "must"
+                              ? "rgba(160,144,112,0.1)"
+                              : "rgba(199,183,163,0.08)",
+                          border:
+                            b.priority === "must"
+                              ? "1px solid rgba(160,144,112,0.25)"
+                              : "1px solid rgba(199,183,163,0.2)",
+                          opacity: isPast ? 0.6 : 1,
                         }}
                       >
-                        {b.subject}
-                      </p>
-                      <p style={{ color: "#8B7A6A", fontSize: "0.6rem" }}>
-                        {SLOT_TIMES[b.slot] || "AM"} · {b.duration}m
-                      </p>
-                      {isPast && (
-                        <p style={{ color: "#6D2932", fontSize: "0.55rem" }}>
-                          Missed
+                        <p
+                          style={{
+                            color:
+                              b.priority === "must" ? "#a09070" : "#C7B7A3",
+                            fontSize: "0.65rem",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {b.subject}
                         </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                        <p style={{ color: "#8B7A6A", fontSize: "0.6rem" }}>
+                          {SLOT_TIMES[b.slot] || "AM"} · {b.duration}m
+                        </p>
+                        {isPast && (
+                          <p style={{ color: "#6D2932", fontSize: "0.55rem" }}>
+                            Missed
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-6 flex-wrap gap-y-2">
         <span
           style={{ color: "#a09070", fontSize: "0.75rem" }}
           className="flex items-center gap-1.5"
@@ -2137,7 +2187,11 @@ function CalendarTab({
 // ─── TAB 4: REVIEW ───────────────────────────────────────────────────────────
 function ReviewTab({
   inputs,
-}: { result?: SimulationResult | null; inputs: SimulationInputs | null }) {
+}: {
+  result?: SimulationResult | null;
+  inputs: SimulationInputs | null;
+  globalSubjects?: Subject[];
+}) {
   const history = useMemo(() => {
     const raw = localStorage.getItem("performative_history");
     return raw
@@ -2577,10 +2631,16 @@ export default function App() {
   const [globalInputs, setGlobalInputs] = useState<SimulationInputs | null>(
     null,
   );
+  const [globalSubjects, setGlobalSubjects] = useState<Subject[]>([
+    { id: "1", name: "Mathematics", confidence: "medium", weight: "high" },
+    { id: "2", name: "Economics", confidence: "low", weight: "medium" },
+    { id: "3", name: "English", confidence: "high", weight: "low" },
+  ]);
 
   const handleResultGenerated = (r: SimulationResult, i: SimulationInputs) => {
     setGlobalResult(r);
     setGlobalInputs(i);
+    setGlobalSubjects(i.subjects);
   };
 
   return (
@@ -2598,7 +2658,7 @@ export default function App() {
           backdropFilter: "blur(12px)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-3">
               <span
@@ -2625,7 +2685,7 @@ export default function App() {
                 </span>
               )}
             </div>
-            <nav className="flex items-center gap-1">
+            <nav className="hidden sm:flex items-center gap-1">
               {TABS.map((tab) => (
                 <button
                   type="button"
@@ -2659,7 +2719,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 md:px-12 py-10">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 py-6 md:py-10 pb-24 md:pb-10">
         <AnimatePresence mode="wait">
           {activeTab === "analysis" && (
             <motion.div
@@ -2669,7 +2729,11 @@ export default function App() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <AnalysisTab onResultGenerated={handleResultGenerated} />
+              <AnalysisTab
+                onResultGenerated={handleResultGenerated}
+                globalSubjects={globalSubjects}
+                setGlobalSubjects={setGlobalSubjects}
+              />
             </motion.div>
           )}
           {activeTab === "study" && (
@@ -2680,7 +2744,11 @@ export default function App() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <StudyModeTab result={globalResult} inputs={globalInputs} />
+              <StudyModeTab
+                result={globalResult}
+                inputs={globalInputs}
+                globalSubjects={globalSubjects}
+              />
             </motion.div>
           )}
           {activeTab === "calendar" && (
@@ -2691,7 +2759,11 @@ export default function App() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <CalendarTab result={globalResult} inputs={globalInputs} />
+              <CalendarTab
+                result={globalResult}
+                inputs={globalInputs}
+                globalSubjects={globalSubjects}
+              />
             </motion.div>
           )}
           {activeTab === "review" && (
@@ -2702,11 +2774,54 @@ export default function App() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <ReviewTab result={globalResult} inputs={globalInputs} />
+              <ReviewTab
+                result={globalResult}
+                inputs={globalInputs}
+                globalSubjects={globalSubjects}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
+
+      {/* Mobile Bottom Tab Navigation */}
+      <nav
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center"
+        style={{
+          background: "rgba(7,2,4,0.97)",
+          borderTop: "1px solid rgba(109,41,50,0.3)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        {TABS.map((tab) => (
+          <button
+            type="button"
+            key={tab.key}
+            data-ocid={`mobile_nav.${tab.key}.link`}
+            onClick={() => setActiveTab(tab.key)}
+            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-all duration-200 cursor-pointer"
+            style={{
+              color: activeTab === tab.key ? "#E8D8C4" : "#6B5C52",
+              background: "transparent",
+              border: "none",
+            }}
+          >
+            <span
+              style={{ color: activeTab === tab.key ? "#561C24" : "#6B5C52" }}
+            >
+              {tab.icon}
+            </span>
+            <span
+              style={{
+                fontSize: "0.6rem",
+                fontWeight: activeTab === tab.key ? 700 : 400,
+              }}
+            >
+              {tab.label}
+            </span>
+          </button>
+        ))}
+      </nav>
 
       {/* Footer */}
       <footer
@@ -2715,7 +2830,7 @@ export default function App() {
           marginTop: "4rem",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12 py-6 mb-16 md:mb-0 flex items-center justify-between">
           <span style={{ color: "#374151", fontSize: "0.75rem" }}>
             © {new Date().getFullYear()} Performative
           </span>
